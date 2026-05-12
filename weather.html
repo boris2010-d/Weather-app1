@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <link rel="stylesheet" href="weather.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<main class="app">
+
+    <header class="app-header">
+        <h1 class="app-title">Приложение за времето</h1>
+    </header>
+
+    <section class="search-section">
+        <form id="search-form" class="search-form">
+            <input
+                type="text"
+                id="city-input"
+                class="search-input"
+                placeholder="Въведи град..."
+                autocomplete="off"
+                required
+            >
+            <button type="submit" class="search-button">Търси</button>
+        </form>
+    </section>
+
+    <section class="status-section">
+        <p id="loading" class="message loading hidden">Зареждане...</p>
+        <p id="error" class="message error hidden"></p>
+    </section>
+
+    <section id="weather-section" class="weather-section hidden">
+
+        <div class="weather-header">
+            <h2 id="city-name" class="city-name">Град</h2>
+        </div>
+
+        <div class="weather-main">
+            <div class="weather-icon">
+                <i id="weather-icon" class="fa-solid fa-cloud"></i>
+            </div>
+
+            <div class="weather-details">
+                <p id="temperature" class="temperature">--°C</p>
+                <p id="description" class="description">--</p>
+            </div>
+        </div>
+
+        <div class="weather-extra">
+            <div class="extra-item">
+                <span class="extra-label">Влажност</span>
+                <p id="humidity">--%</p>
+            </div>
+
+            <div class="extra-item">
+                <span class="extra-label">Вятър</span>
+                <p id="wind-speed">-- m/s</p>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="weather.js" defer></script>
+</body>
+</html>
