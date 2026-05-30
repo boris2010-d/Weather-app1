@@ -59,9 +59,9 @@ function displayWeather(data) {
     windSpeed.textContent = `${data.wind.speed} m/s`;
 
     const iconCode = data.weather[0].icon;
-    weatherIcon.src = "";
-    weatherIcon.className = "fa-solid fa-cloud";
     weatherIcon.src = getIconURL(iconCode);
+    updateBackground(data.weather[0].id);
+    updateEmoji(data.weather[0].id);
 
     weatherSection.classList.remove("hidden");
 }
@@ -89,3 +89,35 @@ function showError(msg) {
 function hideError() {
     errorMessage.classList.add("hidden");
 }
+
+function updateBackground(conditionId) {
+    document.body.className = "";
+
+    if (conditionId >= 200 && conditionId <= 232) {
+        document.body.classList.add("stormy");
+    }
+    else if (conditionId >= 300 && conditionId <= 321) {
+        document.body.classList.add("rainy");
+    }
+    else if (conditionId >= 500 && conditionId <= 531) {
+        document.body.classList.add("rainy");
+    }
+    else if (conditionId >= 600 && conditionId <= 622) {
+        document.body.classList.add("snowy");
+    }
+    else if (conditionId >= 701 && conditionId <= 781) {
+        document.body.classList.add("foggy");
+    }
+    else if (conditionId === 800) {
+        document.body.classList.add("sunny");
+    }
+    else if (conditionId >= 801 && conditionId <= 804) {
+        document.body.classList.add("cloudy");
+    }
+    else {
+        document.body.classList.add("night");
+    }
+}
+
+
+
