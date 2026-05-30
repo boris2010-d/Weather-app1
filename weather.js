@@ -13,65 +13,81 @@ const weatherIcon = document.getElementById("weather-icon");
 const humidity = document.getElementById("humidity");
 const windSpeed = document.getElementById("wind-speed");
 
+// API ключ за OpenWeatherMap
 const API_KEY = "39935ee879cea278a3a5f968eadce457";
 
-// Submit listener
+
+
+// СЪБМИТ НА ФОРМАТА
+
 searchForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+    event.preventDefault(); // спира презареждането на страницата
 
-    const city = cityInput.value.trim();
-    if (!city) return;
+    const city = cityInput.value.trim(); // взимаме въведения град
+    if (!city) return; // ако е празно спираме
 
-    getWeather(city);
+    getWeather(city); // извикваме функцията за времето
 });
 
-// Fetch weather
+
+
+// ВЗИМАНЕ НА ВРЕМЕТО ОТ API
 async function getWeather(city) {
     try {
-        showLoading();
-        hideError();
+        showLoading();  // показваме "зареждане"
+        hideError();    // скриваме грешките
 
+        // URL към OpenWeatherMap API
         const url =
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=bg`;
 
-        const response = await fetch(url);
-        const data = await response.json();
+        const response = await fetch(url); // изпращаме заявка
+        const data = await response.json(); // получаваме JSON
 
         if (data.cod !== 200) {
             throw new Error("Градът не е намерен.");
         }
 
-        displayWeather(data);
+        displayWeather(data); // показваме времето
 
     } catch (error) {
-        showError(error.message);
+        showError(error.message); // показваме грешка
     } finally {
-        hideLoading();
+        hideLoading(); // винаги скриваме "зареждане"
     }
 }
 
-// Display weather
+
+// ПОКАЗВАНЕ НА ВРЕМЕТО
 function displayWeather(data) {
+    // Основна информация
     cityName.textContent = data.name;
     temperature.textContent = `${Math.round(data.main.temp)}°C`;
     description.textContent = data.weather[0].description;
     humidity.textContent = `${data.main.humidity}%`;
     windSpeed.textContent = `${data.wind.speed} m/s`;
 
+    // Икона от OpenWeather
     const iconCode = data.weather[0].icon;
     weatherIcon.src = getIconURL(iconCode);
+
+    // Динамичен фон + mood emoji
     updateBackground(data.weather[0].id);
     updateEmoji(data.weather[0].id);
 
-    weatherSection.classList.remove("hidden");
+    weatherSection.classList.remove("hidden"); // показваме секцията
 }
 
-// Icon URL
+
+
+// ВЗИМАНЕ НА URL ЗА ИКОНАТА
 function getIconURL(icon) {
     return `https://openweathermap.org/img/wn/${icon}@2x.png`;
 }
 
-// Loading / Error
+
+
+// СЪОБЩЕНИЯ ЗА ЗАРЕЖДАНЕ / ГРЕШКА
 function showLoading() {
     loadingMessage.classList.remove("hidden");
 }
@@ -90,9 +106,13 @@ function hideError() {
     errorMessage.classList.add("hidden");
 }
 
-function updateBackground(conditionId) {
-    document.body.className = "";
 
+
+// ДИНАМИЧЕН ФОН СПОРЕД ВРЕМЕТО
+function updateBackground(conditionId) {
+    document.body.className = ""; // махаме стария фон
+
+    // Проверяваме по weather ID
     if (conditionId >= 200 && conditionId <= 232) {
         document.body.classList.add("stormy");
     }
@@ -119,5 +139,21 @@ function updateBackground(conditionId) {
     }
 }
 
+
+
+// MOOD EMOJI СПОРЕД ВРЕМЕТО
+function updateEmoji(conditionId) {
+    const emoji = document.getElementById("mood-emoji");
+
+    // Избираме емоджи според weather ID
+    if (conditionId >= 200 && conditionId <= 232) emoji.textContent = "⛈️";
+    else if (conditionId >= 300 && conditionId <= 321) emoji.textContent = "🌦️";
+    else if (conditionId >= 500 && conditionId <= 531) emoji.textContent = "🌧️";
+    else if (conditionId >= 600 && conditionId <= 622) emoji.textContent = "❄️";
+    else if (conditionId >= 701 && conditionId <= 781) emoji.textContent = "🌫️";
+    else if (conditionId === 800) emoji.textContent = "😎";
+    else if (conditionId >= 801 && conditionId <= 804) emoji.textContent = "☁️";
+    else emoji.textContent = "🌍"; // fallback
+}
 
 

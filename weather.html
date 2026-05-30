@@ -17,8 +17,10 @@
 
     <header class="app-header">
         <h1 class="app-title">Приложение за времето</h1>
-        
+        <p id="mood-emoji" class="mood-emoji">🙂</p>
+
     </header>
+
 
     <section class="search-section">
         <form id="search-form" class="search-form">
@@ -34,28 +36,35 @@
         </form>
     </section>
 
+
+    <!-- Съобщения за грешка и зареждане -->
     <section class="status-section">
         <p id="loading" class="message loading hidden">Зареждане...</p>
         <p id="error" class="message error hidden"></p>
     </section>
 
+
+    <!-- Основната секция с времето -->
     <section id="weather-section" class="weather-section hidden">
 
         <div class="weather-header">
             <h2 id="city-name" class="city-name">Град</h2>
         </div>
 
+            <!-- Икона за времето -->
         <div class="weather-main">
             <div class="weather-icon">
                 <i id="weather-icon" class="fa-solid fa-cloud"></i>
             </div>
 
+            <!-- Температура и описание -->
             <div class="weather-details">
                 <p id="temperature" class="temperature">--°C</p>
                 <p id="description" class="description">--</p>
             </div>
         </div>
 
+        <!-- Допълнителна информация -->
         <div class="weather-extra">
             <div class="extra-item">
                 <span class="extra-label">Влажност</span>
