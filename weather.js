@@ -97,10 +97,28 @@ function hideLoading() {
 }
 
 function showError(msg) {
+    // Показваме текста на грешката
     errorMessage.textContent = msg;
     errorMessage.classList.remove("hidden");
+
+    // Скриваме секцията с времето
     weatherSection.classList.add("hidden");
+
+    // Изчистваме старите данни
+    cityName.textContent = "";
+    temperature.textContent = "";
+    description.textContent = "";
+    humidity.textContent = "";
+    windSpeed.textContent = "";
+
+    // Нулираме иконата
+    weatherIcon.src = "";
+    weatherIcon.className = "fa-solid fa-cloud"; // fallback икона
+
+    // Нулираме mood emoji
+    document.getElementById("mood-emoji").textContent = "🙂";
 }
+
 
 function hideError() {
     errorMessage.classList.add("hidden");
