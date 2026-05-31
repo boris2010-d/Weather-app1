@@ -24,10 +24,10 @@ const API_KEY = "39935ee879cea278a3a5f968eadce457";
 
 // СЪБМИТ НА ФОРМАТА
 
-searchForm.addEventListener("submit", (event) => {
+DOM.searchForm.addEventListener("submit", (event) => {
     event.preventDefault(); // спира презареждането на страницата
 
-    const city = cityInput.value.trim(); // взимаме въведения град
+    const city = DOM.cityInput.value.trim(); // взимаме въведения град
     if (!city) return; // ако е празно спираме
 
     getWeather(city); // извикваме функцията за времето
@@ -65,21 +65,21 @@ async function getWeather(city) {
 // ПОКАЗВАНЕ НА ВРЕМЕТО
 function displayWeather(data) {
     // Основна информация
-    cityName.textContent = data.name;
-    temperature.textContent = `${Math.round(data.main.temp)}°C`;
-    description.textContent = data.weather[0].description;
-    humidity.textContent = `${data.main.humidity}%`;
-    windSpeed.textContent = `${data.wind.speed} m/s`;
+    DOM.cityName.textContent = data.name;
+    DOM.temperature.textContent = `${Math.round(data.main.temp)}°C`;
+    DOM.description.textContent = data.weather[0].description;
+    DOM.humidity.textContent = `${data.main.humidity}%`;
+    DOM.windSpeed.textContent = `${data.wind.speed} m/s`;
 
     // Икона от OpenWeather
     const iconCode = data.weather[0].icon;
-    weatherIcon.src = getIconURL(iconCode);
+    DOM.weatherIcon.src = getIconURL(iconCode);
 
     // Динамичен фон + mood emoji
     updateBackground(data.weather[0].id);
     updateEmoji(data.weather[0].id);
 
-    weatherSection.classList.remove("hidden"); // показваме секцията
+    DOM.weatherSection.classList.remove("hidden"); // показваме секцията
 }
 
 
@@ -93,39 +93,43 @@ function getIconURL(icon) {
 
 // СЪОБЩЕНИЯ ЗА ЗАРЕЖДАНЕ / ГРЕШКА
 function showLoading() {
-    loadingMessage.classList.remove("hidden");
+    DOM.loading.classList.remove("hidden");
+
 }
 
 function hideLoading() {
-    loadingMessage.classList.add("hidden");
+    DOM.loading.classList.add("hidden");
 }
 
 function showError(msg) {
     // Показваме текста на грешката
-    errorMessage.textContent = msg;
-    errorMessage.classList.remove("hidden");
+    DOM.error.textContent = msg;
+    DOM.error.classList.remove("hidden");
+
 
     // Скриваме секцията с времето
-    weatherSection.classList.add("hidden");
+    DOM.weatherSection.classList.add("hidden");
 
     // Изчистваме старите данни
-    cityName.textContent = "";
-    temperature.textContent = "";
-    description.textContent = "";
-    humidity.textContent = "";
-    windSpeed.textContent = "";
+    DOM.cityName.textContent = "";
+    DOM.temperature.textContent = "";
+    DOM.description.textContent = "";
+    DOM.humidity.textContent = "";
+    DOM.windSpeed.textContent = "";
 
     // Нулираме иконата
-    weatherIcon.src = "";
-    weatherIcon.className = "fa-solid fa-cloud"; // fallback икона
+    DOM.weatherIcon.src = "";
+    DOM.weatherIcon.className = "fa-solid fa-cloud"; // fallback икона
 
     // Нулираме mood emoji
-    document.getElementById("mood-emoji").textContent = "🙂";
+    DOM.moodEmoji.textContent = "🙂";
+    
 }
 
 
 function hideError() {
-    errorMessage.classList.add("hidden");
+    DOM.error.classList.add("hidden");
+
 }
 
 
