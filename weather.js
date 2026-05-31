@@ -1,17 +1,21 @@
-// Selectors
-const searchForm = document.getElementById("search-form");
-const cityInput = document.getElementById("city-input");
+const DOM = {
+    searchForm: document.getElementById("search-form"),
+    cityInput: document.getElementById("city-input"),
 
-const loadingMessage = document.getElementById("loading");
-const errorMessage = document.getElementById("error");
+    loading: document.getElementById("loading"),
+    error: document.getElementById("error"),
 
-const weatherSection = document.getElementById("weather-section");
-const cityName = document.getElementById("city-name");
-const temperature = document.getElementById("temperature");
-const description = document.getElementById("description");
-const weatherIcon = document.getElementById("weather-icon");
-const humidity = document.getElementById("humidity");
-const windSpeed = document.getElementById("wind-speed");
+    weatherSection: document.getElementById("weather-section"),
+    cityName: document.getElementById("city-name"),
+    temperature: document.getElementById("temperature"),
+    description: document.getElementById("description"),
+    weatherIcon: document.getElementById("weather-icon"),
+    humidity: document.getElementById("humidity"),
+    windSpeed: document.getElementById("wind-speed"),
+
+    moodEmoji: document.getElementById("mood-emoji")
+};
+
 
 // API ключ за OpenWeatherMap
 const API_KEY = "39935ee879cea278a3a5f968eadce457";
