@@ -246,15 +246,14 @@ body.night {
     text-align: center;
 }
 
-/* Списъкът с историята – показва макс 3 елемента със скрол */
 .history-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 146px;    /* Ограничава височината точно до 3 елемента */
-    overflow-y: auto;     /* Активира вертикалния скрол */
-    padding-right: 6px;   /* Леко разстояние, за да не се застъпва текста със скрола */
+    max-height: 146px;    /* Ограничава височината до 3 елемента */
+    overflow-y: auto;     /* Вертикален скрол */
+    padding-right: 6px;
 }
 
 .history-list li {
@@ -270,21 +269,42 @@ body.night {
     background: rgba(255, 255, 255, 0.28);
 }
 
-/* Стилизиране на скролбара за историята */
+/* Стилизиране на скролбара */
 .history-list::-webkit-scrollbar {
-    width: 6px; /* Тънък скролбар */
+    width: 6px;
 }
 
 .history-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05); /* Прозрачна основа */
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
 }
 
 .history-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25); /* Полупрозрачно плъзгаче */
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 10px;
 }
 
 .history-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.45); /* По-светло при посочване */
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* Стил за новия бутон за изчистване на историята */
+.clear-history-button {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    background: rgba(255, 75, 75, 0.2); /* Леко червеникав стъклен ефект */
+    color: #ffcccc;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.clear-history-button:hover {
+    background: rgba(255, 75, 75, 0.35);
+    color: #ffffff;
 }

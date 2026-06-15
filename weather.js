@@ -16,7 +16,9 @@ const DOM = { // object that stores all DOM elements
     moodEmoji: document.getElementById("mood-emoji"), // mood emoji
 
     alertSection: document.getElementById("alert-section"), // alert container
-    alertText: document.getElementById("alert-text") // alert text
+    alertText: document.getElementById("alert-text"), // alert text
+    
+    clearHistoryBtn: document.getElementById("clear-history-btn") // clear history button
 };
 
 // API key for OpenWeatherMap
@@ -30,6 +32,12 @@ DOM.searchForm.addEventListener("submit", (event) => { // listen for submit
     if (!city) return; // stop if empty
 
     getWeather(city); // call weather function
+});
+
+// CLEAR HISTORY EVENT
+DOM.clearHistoryBtn.addEventListener("click", () => {
+    localStorage.removeItem("history"); // изтрива записа от браузъра
+    renderHistory(); // преначертава списъка (който вече ще е празен)
 });
 
 // FETCH WEATHER FROM API
@@ -259,6 +267,13 @@ function saveToHistory(city) {
 function renderHistory() {
     const list = document.getElementById("history-list");
     const history = JSON.parse(localStorage.getItem("history")) || [];
+
+    // Показва бутона за триене само ако има градове в историята
+    if (history.length === 0) {
+        DOM.clearHistoryBtn.classList.add("hidden");
+    } else {
+        DOM.clearHistoryBtn.classList.remove("hidden");
+    }
 
     list.innerHTML = "";
 
