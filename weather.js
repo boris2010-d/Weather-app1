@@ -9,11 +9,14 @@ const DOM = { // object that stores all DOM elements
     cityName: document.getElementById("city-name"), // city name
     temperature: document.getElementById("temperature"), // temperature
     description: document.getElementById("description"), // weather description
-    weatherIcon: document.getElementById("weather-icon"), // weather icon
+    weatherIcon: document.getElementById("weather-icon"), // weather icon (img)
     humidity: document.getElementById("humidity"), // humidity
     windSpeed: document.getElementById("wind-speed"), // wind speed
 
-    moodEmoji: document.getElementById("mood-emoji") // mood emoji
+    moodEmoji: document.getElementById("mood-emoji"), // mood emoji
+
+    alertSection: document.getElementById("alert-section"), // alert container
+    alertText: document.getElementById("alert-text") // alert text
 };
 
 // API key for OpenWeatherMap
@@ -46,7 +49,9 @@ async function getWeather(city) { // async function for fetch
         }
 
         displayWeather(data); // display weather
+        updateAlert(data);    // update weather alert
         saveToHistory(city);  // save city to history
+        getForecast(city);    // load weekly forecast
 
     } catch (error) {
         showError(error.message); // show error message
@@ -65,6 +70,7 @@ function displayWeather(data) { // function to visualize weather
 
     const iconCode = data.weather[0].icon; // icon code
     DOM.weatherIcon.src = getIconURL(iconCode); // set icon URL
+    DOM.weatherIcon.alt = data.weather[0].description;
 
     updateBackground(data.weather[0].id); // change background
     updateEmoji(data.weather[0].id); // change emoji
@@ -91,6 +97,8 @@ function showError(msg) { // show error
     DOM.error.classList.remove("hidden"); // show error
 
     DOM.weatherSection.classList.add("hidden"); // hide weather
+    DOM.alertSection.classList.add("hidden"); // hide alert
+    document.getElementById("forecast-section").classList.add("hidden"); // hide forecast
 
     DOM.cityName.textContent = ""; // clear city
     DOM.temperature.textContent = ""; // clear temperature
@@ -99,7 +107,6 @@ function showError(msg) { // show error
     DOM.windSpeed.textContent = ""; // clear wind
 
     DOM.weatherIcon.src = ""; // clear src
-    DOM.weatherIcon.className = "fa-solid fa-cloud"; // fallback icon
 
     DOM.moodEmoji.textContent = "🙂"; // default emoji
 }
@@ -140,7 +147,7 @@ function updateBackground(conditionId) { // change background
 
 // MOOD EMOJI BASED ON WEATHER
 function updateEmoji(conditionId) { // change emoji
-    const emoji = document.getElementById("mood-emoji"); // get emoji element
+    const emoji = DOM.moodEmoji; // emoji element
 
     if (conditionId >= 200 && conditionId <= 232) emoji.textContent = "⛈️"; // storm
     else if (conditionId >= 300 && conditionId <= 321) emoji.textContent = "🌦️"; // drizzle
@@ -150,6 +157,89 @@ function updateEmoji(conditionId) { // change emoji
     else if (conditionId === 800) emoji.textContent = "😎"; // clear
     else if (conditionId >= 801 && conditionId <= 804) emoji.textContent = "☁️"; // clouds
     else emoji.textContent = "🌍"; // fallback
+}
+
+// WEATHER ALERTS
+function updateAlert(data) { // create simple alerts based on conditions
+    const id = data.weather[0].id;
+    const wind = data.wind.speed;
+    const temp = data.main.temp;
+
+    let message = "";
+
+    if (id >= 200 && id <= 232) {
+        message = "⚠ Силна буря! Бъди внимателен навън.";
+    } else if (id >= 500 && id <= 531) {
+        message = "☔ Вали дъжд. Вземи си чадър.";
+    } else if (id >= 600 && id <= 622) {
+        message = "❄ Сняг навън. Внимавай по пътищата.";
+    } else if (id >= 701 && id <= 781) {
+        message = "🌫 Намалена видимост. Шофирай внимателно.";
+    } else if (wind >= 10) {
+        message = "💨 Силен вятър. Внимавай с предмети навън.";
+    } else if (temp >= 30) {
+        message = "🔥 Много топло. Пий повече вода.";
+    } else if (temp <= -5) {
+        message = "🥶 Много студено. Облечи се добре.";
+    }
+
+    if (message) {
+        DOM.alertText.textContent = message;
+        DOM.alertSection.classList.remove("hidden");
+    } else {
+        DOM.alertSection.classList.add("hidden");
+        DOM.alertText.textContent = "";
+    }
+}
+
+// WEEKLY FORECAST – fetch
+async function getForecast(city) {
+    const url =
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=bg`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.cod !== "200") return;
+
+    displayForecast(data);
+}
+
+// WEEKLY FORECAST – display cards
+function displayForecast(data) {
+    const container = document.getElementById("forecast-cards");
+    container.innerHTML = "";
+
+    const daily = {};
+
+    data.list.forEach(item => {
+        const date = item.dt_txt.split(" ")[0];
+
+        if (!daily[date]) {
+            daily[date] = item;
+        }
+    });
+
+    Object.values(daily).slice(0, 5).forEach(day => {
+        const icon = day.weather[0].icon;
+        const temp = Math.round(day.main.temp);
+        const desc = day.weather[0].description;
+        const date = day.dt_txt.split(" ")[0];
+
+        const card = document.createElement("div");
+        card.className = "forecast-card";
+
+        card.innerHTML = `
+            <p>${date}</p>
+            <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${desc}">
+            <p>${temp}°C</p>
+            <p>${desc}</p>
+        `;
+
+        container.appendChild(card);
+    });
+
+    document.getElementById("forecast-section").classList.remove("hidden");
 }
 
 // SEARCH HISTORY – save city

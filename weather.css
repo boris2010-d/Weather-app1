@@ -69,9 +69,35 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
+/* Status messages */
+.message {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.message.error {
+    color: #ffdddd;
+}
+
+.message.loading {
+    color: #e0f7ff;
+}
+
+/* Alert section */
+.alert-section {
+    margin-bottom: 15px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 80, 80, 0.18);
+    border: 1px solid rgba(255, 120, 120, 0.6);
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+/* Weather section */
 .weather-section {
     display: flex;
     flex-direction: column;
@@ -92,9 +118,11 @@ body {
     gap: 20px;
 }
 
-.weather-icon i,
-.weather-icon img {
-    font-size: 3.5rem;
+.weather-icon-img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    object-fit: contain;
 }
 
 .temperature {
@@ -164,6 +192,45 @@ body.night {
     width: 100%;
 }
 
+/* Weekly Forecast */
+.forecast-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.forecast-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.forecast-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.forecast-card {
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.18);
+    text-align: center;
+    backdrop-filter: blur(6px);
+}
+
+.forecast-card img {
+    width: 60px;
+    height: 60px;
+}
+
+.forecast-card p {
+    margin-top: 6px;
+    font-size: 0.9rem;
+}
+
 /* Search History */
 .history-section {
     margin-top: 30px;
@@ -179,11 +246,15 @@ body.night {
     text-align: center;
 }
 
+/* Списъкът с историята – показва макс 3 елемента със скрол */
 .history-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-height: 146px;    /* Ограничава височината точно до 3 елемента */
+    overflow-y: auto;     /* Активира вертикалния скрол */
+    padding-right: 6px;   /* Леко разстояние, за да не се застъпва текста със скрола */
 }
 
 .history-list li {
@@ -199,3 +270,21 @@ body.night {
     background: rgba(255, 255, 255, 0.28);
 }
 
+/* Стилизиране на скролбара за историята */
+.history-list::-webkit-scrollbar {
+    width: 6px; /* Тънък скролбар */
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05); /* Прозрачна основа */
+    border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25); /* Полупрозрачно плъзгаче */
+    border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.45); /* По-светло при посочване */
+}
