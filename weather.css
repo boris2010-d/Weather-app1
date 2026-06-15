@@ -13,8 +13,6 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-
-    /* Начален фон - може да се промени според времето */
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     color: #ffffff;
 }
@@ -42,6 +40,7 @@ body {
 .search-form {
     display: flex;
     gap: 12px;
+    margin-bottom: 20px;
 }
 
 .search-input {
@@ -52,6 +51,11 @@ body {
     background: rgba(255, 255, 255, 0.18);
     color: white;
     font-size: 1rem;
+}
+
+.search-input::placeholder {
+    color: white;
+    opacity: 1;
 }
 
 .search-button {
@@ -72,6 +76,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 25px;
+    margin-top: 10px;
 }
 
 .city-name {
@@ -87,9 +92,9 @@ body {
     gap: 20px;
 }
 
-.weather-icon i {
-    font-size: 5rem;
-    color: #ffe082;
+.weather-icon i,
+.weather-icon img {
+    font-size: 3.5rem;
 }
 
 .temperature {
@@ -122,7 +127,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Динамични фонове според времето */
+/* Dynamic backgrounds */
 body.sunny {
     background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
 }
@@ -151,7 +156,7 @@ body.night {
     background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
 }
 
-/* Mood emoji – голямо и центрирано */
+/* Mood emoji */
 .mood-emoji {
     font-size: 3rem;
     margin-top: 10px;
@@ -159,5 +164,38 @@ body.night {
     width: 100%;
 }
 
+/* Search History */
+.history-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.12);
+}
 
+.history-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.history-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.history-list li {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.history-list li:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
 
