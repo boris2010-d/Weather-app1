@@ -72,21 +72,15 @@ body {
     display: none !important;
 }
 
-/* Status messages */
+/* Статуси */
 .message {
     text-align: center;
     margin-bottom: 10px;
 }
+.message.error { color: #ffdddd; }
+.message.loading { color: #e0f7ff; }
 
-.message.error {
-    color: #ffdddd;
-}
-
-.message.loading {
-    color: #e0f7ff;
-}
-
-/* Alert section */
+/* Предупреждения */
 .alert-section {
     margin-bottom: 15px;
     padding: 12px 14px;
@@ -97,7 +91,7 @@ body {
     font-size: 0.95rem;
 }
 
-/* Weather section */
+/* Секция Време */
 .weather-section {
     display: flex;
     flex-direction: column;
@@ -131,7 +125,8 @@ body {
 }
 
 .description {
-    margin-top: 6px;
+    margin-top: -10px;
+    text-align: center;
     font-size: 1rem;
     text-transform: capitalize;
 }
@@ -155,36 +150,15 @@ body {
     font-size: 0.9rem;
 }
 
-/* Dynamic backgrounds */
-body.sunny {
-    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-}
+/* Динамични фонове */
+body.sunny { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+body.cloudy { background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); }
+body.rainy { background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%); }
+body.stormy { background: linear-gradient(135deg, #232526 0%, #414345 100%); }
+body.snowy { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); }
+body.foggy { background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%); }
+body.night { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
 
-body.cloudy {
-    background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
-}
-
-body.rainy {
-    background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%);
-}
-
-body.stormy {
-    background: linear-gradient(135deg, #232526 0%, #414345 100%);
-}
-
-body.snowy {
-    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-}
-
-body.foggy {
-    background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);
-}
-
-body.night {
-    background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
-}
-
-/* Mood emoji */
 .mood-emoji {
     font-size: 3rem;
     margin-top: 10px;
@@ -192,7 +166,7 @@ body.night {
     width: 100%;
 }
 
-/* Weekly Forecast */
+/* Седмична прогноза */
 .forecast-section {
     margin-top: 30px;
     padding: 20px;
@@ -221,17 +195,10 @@ body.night {
     backdrop-filter: blur(6px);
 }
 
-.forecast-card img {
-    width: 60px;
-    height: 60px;
-}
+.forecast-card img { width: 60px; height: 60px; }
+.forecast-card p { margin-top: 6px; font-size: 0.9rem; }
 
-.forecast-card p {
-    margin-top: 6px;
-    font-size: 0.9rem;
-}
-
-/* Search History */
+/* История */
 .history-section {
     margin-top: 30px;
     padding: 20px;
@@ -251,8 +218,8 @@ body.night {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 146px;    /* Ограничава височината до 3 елемента */
-    overflow-y: auto;     /* Вертикален скрол */
+    max-height: 146px;
+    overflow-y: auto;
     padding-right: 6px;
 }
 
@@ -265,30 +232,11 @@ body.night {
     transition: 0.2s;
 }
 
-.history-list li:hover {
-    background: rgba(255, 255, 255, 0.28);
-}
+.history-list li:hover { background: rgba(255, 255, 255, 0.28); }
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+.history-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 10px; }
 
-/* Стилизиране на скролбара */
-.history-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.history-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-.history-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 10px;
-}
-
-.history-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.45);
-}
-
-/* Стил за бутона за изчистване на историята */
 .clear-history-button {
     display: block;
     width: 100%;
@@ -304,14 +252,9 @@ body.night {
     transition: 0.2s;
 }
 
-.clear-history-button:hover {
-    background: rgba(255, 75, 75, 0.35);
-    color: #ffffff;
-}
+.clear-history-button:hover { background: rgba(255, 75, 75, 0.35); color: #ffffff; }
 
-/* ======================================================= */
-/* СТИЛИЗИРАНЕ НА ДЕТАЛНАТА СТРАНИЦА ЗА КОНКРЕТЕН ДЕН     */
-/* ======================================================= */
+/* Детайлна страница и Часове */
 .day-page {
     display: flex;
     flex-direction: column;
@@ -333,20 +276,9 @@ body.night {
     transition: 0.2s;
 }
 
-.day-back-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-}
-
-#day-city {
-    font-size: 1.8rem;
-    font-weight: 700;
-}
-
-#day-date {
-    font-size: 1.1rem;
-    opacity: 0.8;
-    margin-top: -10px;
-}
+.day-back-btn:hover { background: rgba(255, 255, 255, 0.35); }
+#day-city { font-size: 1.8rem; font-weight: 700; }
+#day-date { font-size: 1.1rem; opacity: 0.8; margin-top: -10px; }
 
 #day-humidity, #day-wind {
     padding: 18px;
@@ -356,9 +288,53 @@ body.night {
     width: 100%;
     font-size: 1rem;
 }
+#day-humidity b, #day-wind b { display: block; font-size: 1.4rem; margin-top: 5px; }
 
-#day-humidity b, #day-wind b {
-    display: block;
-    font-size: 1.4rem;
-    margin-top: 5px;
+/* Хоризонтален списък с часове */
+.hourly-forecast-container {
+    width: 100%;
+    margin: 5px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
 }
+
+.main-hourly {
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.hourly-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: left;
+    opacity: 0.9;
+}
+
+.hourly-cards {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto; 
+    padding-bottom: 10px;
+}
+
+.hour-card {
+    min-width: 65px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hour-time { font-size: 0.85rem; opacity: 0.8; }
+.hour-card img { width: 40px; height: 40px; }
+.hour-temp { font-size: 1rem; font-weight: 600; }
+
+.hourly-cards::-webkit-scrollbar { height: 5px; }
+.hourly-cards::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+.hourly-cards::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+ 

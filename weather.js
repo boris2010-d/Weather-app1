@@ -20,7 +20,7 @@ const DOM = { // object that stores all DOM elements
     
     clearHistoryBtn: document.getElementById("clear-history-btn"), // clear history button
 
-    // НОВИ ЕЛЕМЕНТИ ЗА СТРАНИЦАТА НА ДЕНЯ
+    // ЕЛЕМЕНТИ ЗА СТРАНИЦАТА НА ДЕНЯ И ЧАСОВЕТЕ
     appHeader: document.querySelector(".app-header"),
     searchSection: document.querySelector(".search-section"),
     statusSection: document.querySelector(".status-section"),
@@ -67,6 +67,7 @@ DOM.dayBackBtn.addEventListener("click", () => {
     DOM.weatherSection.classList.remove("hidden");
     DOM.forecastSection.classList.remove("hidden");
     DOM.historySection.classList.remove("hidden");
+    document.getElementById("main-hourly-section").classList.remove("hidden");
     if (DOM.alertText.textContent) DOM.alertSection.classList.remove("hidden");
 });
 
@@ -139,6 +140,7 @@ function showError(msg) { // show error
     DOM.alertSection.classList.add("hidden"); // hide alert
     DOM.forecastSection.classList.add("hidden"); // hide forecast
     DOM.dayPage.classList.add("hidden");
+    document.getElementById("main-hourly-section").classList.add("hidden");
 
     DOM.cityName.textContent = ""; // clear city
     DOM.temperature.textContent = ""; // clear temperature
@@ -245,32 +247,56 @@ async function getForecast(city) {
     displayForecast(data);
 }
 
-// WEEKLY FORECAST – display cards
+// WEEKLY FORECAST & HOURLY FORECAST
 function displayForecast(data) {
     const container = document.getElementById("forecast-cards");
     container.innerHTML = "";
 
-    const daily = {};
+    const dailyData = {};
+    
     data.list.forEach(item => {
         const date = item.dt_txt.split(" ")[0];
-
-        if (!daily[date]) {
-            daily[date] = item;
+        if (!dailyData[date]) {
+            dailyData[date] = [];
         }
+        dailyData[date].push(item);
     });
 
-    Object.values(daily).slice(0, 5).forEach(day => {
-        const icon = day.weather[0].icon;
-        const temp = Math.round(day.main.temp);
-        const desc = day.weather[0].description;
-        const date = day.dt_txt.split(" ")[0];
-        // Взимаме влажност и вятър от обекта на прогнозата
-        const humidity = day.main.humidity;
-        const wind = day.wind.speed;
+    // --- НОВО: Напълване на часовете за ДНЕШНИЯ ден на НАЧАЛНИЯ екран ---
+    const mainHourlySection = document.getElementById("main-hourly-section");
+    const mainHourlyContainer = document.getElementById("main-hourly-cards");
+    mainHourlyContainer.innerHTML = "";
+    
+    const todayDate = Object.keys(dailyData)[0]; // Взимаме първия ден (днес)
+    dailyData[todayDate].forEach(hourItem => {
+        const time = hourItem.dt_txt.split(" ")[1].substring(0, 5); 
+        const hTemp = Math.round(hourItem.main.temp);
+        const hIcon = hourItem.weather[0].icon;
+
+        const hourCard = document.createElement("div");
+        hourCard.className = "hour-card";
+        hourCard.innerHTML = `
+            <p class="hour-time">${time}</p>
+            <img src="https://openweathermap.org/img/wn/${hIcon}.png" alt="weather">
+            <p class="hour-temp">${hTemp}°C</p>
+        `;
+        mainHourlyContainer.appendChild(hourCard);
+    });
+    mainHourlySection.classList.remove("hidden");
+    // -----------------------------------------------------------------
+
+    // Показване на 5-те дни в седмичната прогноза
+    Object.keys(dailyData).slice(0, 5).forEach(date => {
+        const dayIntervals = dailyData[date];
+        const mainDayInfo = dayIntervals[0];
+
+        const icon = mainDayInfo.weather[0].icon;
+        const temp = Math.round(mainDayInfo.main.temp);
+        const desc = mainDayInfo.weather[0].description;
 
         const card = document.createElement("div");
         card.className = "forecast-card";
-        card.style.cursor = "pointer"; // Правим го видимо, че може да се цъка
+        card.style.cursor = "pointer";
 
         card.innerHTML = `
             <p>${date}</p>
@@ -279,7 +305,6 @@ function displayForecast(data) {
             <p>${desc}</p>
         `;
 
-        // СЪБИТИЕ ЗА КЛИК: Скрива всичко и отваря пълната страница за деня
         card.addEventListener("click", () => {
             DOM.appHeader.classList.add("hidden");
             DOM.searchSection.classList.add("hidden");
@@ -288,17 +313,34 @@ function displayForecast(data) {
             DOM.alertSection.classList.add("hidden");
             DOM.forecastSection.classList.add("hidden");
             DOM.historySection.classList.add("hidden");
+            mainHourlySection.classList.add("hidden");
 
-            // Попълваме данните на новата страница
             DOM.dayCity.textContent = DOM.cityName.textContent;
             DOM.dayDate.textContent = date;
             DOM.dayIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
             DOM.dayTemp.textContent = `${temp}°C`;
             DOM.dayDesc.textContent = desc;
-            DOM.dayHumidity.innerHTML = `<span class="extra-label">Влажност</span> <b>${humidity}%</b>`;
-            DOM.dayWind.innerHTML = `<span class="extra-label">Вятър</span> <b>${wind} m/s</b>`;
+            DOM.dayHumidity.innerHTML = `<span class="extra-label">Влажност</span> <b>${mainDayInfo.main.humidity}%</b>`;
+            DOM.dayWind.innerHTML = `<span class="extra-label">Вятър</span> <b>${mainDayInfo.wind.speed} m/s</b>`;
 
-            // Показваме страницата
+            const hourlyContainer = document.getElementById("day-hourly-cards");
+            hourlyContainer.innerHTML = "";
+
+            dayIntervals.forEach(hourItem => {
+                const time = hourItem.dt_txt.split(" ")[1].substring(0, 5); 
+                const hTemp = Math.round(hourItem.main.temp);
+                const hIcon = hourItem.weather[0].icon;
+
+                const hourCard = document.createElement("div");
+                hourCard.className = "hour-card";
+                hourCard.innerHTML = `
+                    <p class="hour-time">${time}</p>
+                    <img src="https://openweathermap.org/img/wn/${hIcon}.png" alt="weather">
+                    <p class="hour-temp">${hTemp}°C</p>
+                `;
+                hourlyContainer.appendChild(hourCard);
+            });
+
             DOM.dayPage.classList.remove("hidden");
         });
 
@@ -326,7 +368,6 @@ function renderHistory() {
     const list = document.getElementById("history-list");
     const history = JSON.parse(localStorage.getItem("history")) || [];
 
-    // Показва бутона за триене само ако има градове в историята
     if (history.length === 0) {
         DOM.clearHistoryBtn.classList.add("hidden");
     } else {
@@ -348,5 +389,4 @@ function renderHistory() {
     });
 }
 
-// Load history on start
 renderHistory();

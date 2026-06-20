@@ -3,102 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-
+    <title>Приложение за времето</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="weather.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
 
-<main class="app">
+    <div class="app">
+        <header class="app-header">
+            <h1 class="app-title">Приложение за времето</h1>
+            <div id="mood-emoji" class="mood-emoji">🙂</div>
+        </header>
 
-    <header class="app-header">
-        <h1 class="app-title">Приложение за времето</h1>
-        <p id="mood-emoji" class="mood-emoji">🙂</p>
-    </header>
+        <section class="search-section">
+            <form id="search-form" class="search-form">
+                <input type="text" id="city-input" class="search-input" placeholder="Въведени град...">
+                <button type="submit" class="search-button">Търси</button>
+            </form>
 
-    <section class="search-section">
-        <form id="search-form" class="search-form">
-            <input
-                type="text"
-                id="city-input"
-                class="search-input"
-                placeholder="Въведи град..."
-                autocomplete="off"
-                required
-            >
-            <button type="submit" class="search-button">Търси</button>
-        </form>
-    </section>
+            <div class="toggle-container">
+                <button id="unit-toggle" class="unit-toggle-btn">Промени на °F</button>
+            </div>
+        </section>
 
-    <section class="status-section">
-        <p id="loading" class="message loading hidden">Зареждане...</p>
-        <p id="error" class="message error hidden"></p>
-    </section>
+        <section class="status-section">
+            <div id="loading" class="message loading hidden">Зареждане...</div>
+            <div id="error" class="message error hidden"></div>
+        </section>
 
-    <section id="alert-section" class="alert-section hidden">
-        <p id="alert-text"></p>
-    </section>
+        <section id="alert-section" class="alert-section hidden">
+            <p id="alert-text"></p>
+        </section>
 
-    <section id="weather-section" class="weather-section hidden">
-        <div class="weather-header">
-            <h2 id="city-name" class="city-name">Град</h2>
+        <section id="weather-section" class="weather-section hidden">
+            <h2 id="city-name" class="city-name"></h2>
+            
+            <div class="weather-main">
+                <i id="weather-icon" class="weather-icon-fa"></i>
+                <div id="temperature" class="temperature">--°C</div>
+            </div>
+            
+            <div id="description" class="description"></div>
+
+            <div class="weather-extra">
+                <div class="extra-item">
+                    <span class="extra-label">Влажност</span>
+                    <b id="humidity">--%</b>
+                </div>
+                <div class="extra-item">
+                    <span class="extra-label">Вятър</span>
+                    <b id="wind-speed">-- m/s</b>
+                </div>
+            </div>
+        </section>
+
+        <div id="main-hourly-section" class="hourly-forecast-container main-hourly hidden">
+            <h3 class="hourly-title">Прогноза по часове за днес</h3>
+            <div id="main-hourly-cards" class="hourly-cards"></div>
         </div>
 
-        <div class="weather-main">
-            <div class="weather-icon">
-                <img id="weather-icon" class="weather-icon-img" alt="Weather icon">
+        <section id="forecast-section" class="forecast-section hidden">
+            <h3 class="forecast-title">Прогноза за седмицата</h3>
+            <div id="forecast-cards" class="forecast-cards"></div>
+        </section>
+
+        <section id="history-section" class="history-section">
+            <h3 class="history-title">История на търсенията</h3>
+            <ul id="history-list" class="history-list"></ul>
+            <button id="clear-history-btn" class="clear-history-button hidden">Изчисти историята</button>
+        </section>
+
+        <section id="day-page" class="day-page hidden">
+            <button id="day-back-btn" class="day-back-btn">← Назад</button>
+
+            <h2 id="day-city"></h2>
+            <p id="day-date"></p>
+
+            <i id="day-icon" class="weather-icon-fa"></i>
+
+            <p id="day-temp" class="temperature"></p>
+            <p id="day-desc" class="description"></p>
+
+            <div class="hourly-forecast-container">
+                <h3 class="hourly-title">Прогноза по часове</h3>
+                <div id="day-hourly-cards" class="hourly-cards"></div>
             </div>
 
-            <div class="weather-details">
-                <p id="temperature" class="temperature">--°C</p>
-                <p id="description" class="description">--</p>
-            </div>
-        </div>
+            <p id="day-humidity"></p>
+            <p id="day-wind"></p>
+        </section>
+    </div>
 
-        <div class="weather-extra">
-            <div class="extra-item">
-                <span class="extra-label">Влажност</span>
-                <p id="humidity">--%</p>
-            </div>
-
-            <div class="extra-item">
-                <span class="extra-label">Вятър</span>
-                <p id="wind-speed">-- m/s</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="forecast-section" class="forecast-section hidden">
-        <h2 class="forecast-title">Прогноза за седмицата</h2>
-        <div id="forecast-cards" class="forecast-cards"></div>
-    </section>
-    
-    <section id="day-page" class="day-page hidden">
-        <button id="day-back-btn" class="day-back-btn">← Назад</button>
-
-        <h2 id="day-city"></h2>
-        <p id="day-date"></p>
-
-        <img id="day-icon" class="weather-icon-img" alt="Икона за деня">
-
-        <p id="day-temp" class="temperature"></p>
-        <p id="day-desc" class="description"></p>
-
-        <p id="day-humidity"></p>
-        <p id="day-wind"></p>
-    </section>
-
-
-    <section id="history-section" class="history-section">
-        <h2 class="history-title">Search History</h2>
-        <ul id="history-list" class="history-list"></ul>
-        <button id="clear-history-btn" class="clear-history-button hidden">Изчисти историята</button>
-    </section>
-
-</main>
-
-<script src="weather.js" defer></script>
+    <script src="weather.js"></script>
 </body>
 </html>
