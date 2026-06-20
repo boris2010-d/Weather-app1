@@ -288,7 +288,7 @@ body.night {
     background: rgba(255, 255, 255, 0.45);
 }
 
-/* Стил за новия бутон за изчистване на историята */
+/* Стил за бутона за изчистване на историята */
 .clear-history-button {
     display: block;
     width: 100%;
@@ -296,7 +296,7 @@ body.night {
     padding: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    background: rgba(255, 75, 75, 0.2); /* Леко червеникав стъклен ефект */
+    background: rgba(255, 75, 75, 0.2); 
     color: #ffcccc;
     font-size: 0.95rem;
     font-weight: 600;
@@ -307,4 +307,58 @@ body.night {
 .clear-history-button:hover {
     background: rgba(255, 75, 75, 0.35);
     color: #ffffff;
+}
+
+/* ======================================================= */
+/* СТИЛИЗИРАНЕ НА ДЕТАЛНАТА СТРАНИЦА ЗА КОНКРЕТЕН ДЕН     */
+/* ======================================================= */
+.day-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.day-back-btn {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.day-back-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+#day-city {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+#day-date {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-top: -10px;
+}
+
+#day-humidity, #day-wind {
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.12);
+    text-align: center;
+    width: 100%;
+    font-size: 1rem;
+}
+
+#day-humidity b, #day-wind b {
+    display: block;
+    font-size: 1.4rem;
+    margin-top: 5px;
 }

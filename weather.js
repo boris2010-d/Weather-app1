@@ -18,7 +18,23 @@ const DOM = { // object that stores all DOM elements
     alertSection: document.getElementById("alert-section"), // alert container
     alertText: document.getElementById("alert-text"), // alert text
     
-    clearHistoryBtn: document.getElementById("clear-history-btn") // clear history button
+    clearHistoryBtn: document.getElementById("clear-history-btn"), // clear history button
+
+    // НОВИ ЕЛЕМЕНТИ ЗА СТРАНИЦАТА НА ДЕНЯ
+    appHeader: document.querySelector(".app-header"),
+    searchSection: document.querySelector(".search-section"),
+    statusSection: document.querySelector(".status-section"),
+    forecastSection: document.getElementById("forecast-section"),
+    historySection: document.getElementById("history-section"),
+    dayPage: document.getElementById("day-page"),
+    dayBackBtn: document.getElementById("day-back-btn"),
+    dayCity: document.getElementById("day-city"),
+    dayDate: document.getElementById("day-date"),
+    dayIcon: document.getElementById("day-icon"),
+    dayTemp: document.getElementById("day-temp"),
+    dayDesc: document.getElementById("day-desc"),
+    dayHumidity: document.getElementById("day-humidity"),
+    dayWind: document.getElementById("day-wind")
 };
 
 // API key for OpenWeatherMap
@@ -40,21 +56,35 @@ DOM.clearHistoryBtn.addEventListener("click", () => {
     renderHistory(); // преначертава списъка (който вече ще е празен)
 });
 
+// НАЗАД БУТОН ЗА СТРАНИЦАТА НА ДЕНЯ
+DOM.dayBackBtn.addEventListener("click", () => {
+    DOM.dayPage.classList.add("hidden"); // Скриваме страницата за деня
+    
+    // Показваме старите секции обратно
+    DOM.appHeader.classList.remove("hidden");
+    DOM.searchSection.classList.remove("hidden");
+    DOM.statusSection.classList.remove("hidden");
+    DOM.weatherSection.classList.remove("hidden");
+    DOM.forecastSection.classList.remove("hidden");
+    DOM.historySection.classList.remove("hidden");
+    if (DOM.alertText.textContent) DOM.alertSection.classList.remove("hidden");
+});
+
 // FETCH WEATHER FROM API
 async function getWeather(city) { // async function for fetch
     try {
-        showLoading();  // show loading message
-        hideError();    // hide previous errors
+            showLoading();  // show loading message
+            hideError();    // hide previous errors
 
-        const url =
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=bg`; // build URL
+            const url =
+                `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=bg`; // build URL
 
-        const response = await fetch(url); // send request
-        const data = await response.json(); // get JSON
+            const response = await fetch(url); // send request
+            const data = await response.json(); // get JSON
 
-        if (data.cod !== 200) { // if API returns error
-            throw new Error("Градът не е намерен."); // throw error
-        }
+            if (data.cod !== 200) { // if API returns error
+                throw new Error("Градът не е намерен."); // throw error
+            }
 
         displayWeather(data); // display weather
         updateAlert(data);    // update weather alert
@@ -84,6 +114,7 @@ function displayWeather(data) { // function to visualize weather
     updateEmoji(data.weather[0].id); // change emoji
 
     DOM.weatherSection.classList.remove("hidden"); // show weather section
+    DOM.dayPage.classList.add("hidden"); // уверяваме се, че детайлната страница е скрита при ново търсене
 }
 
 // GET ICON URL
@@ -106,7 +137,8 @@ function showError(msg) { // show error
 
     DOM.weatherSection.classList.add("hidden"); // hide weather
     DOM.alertSection.classList.add("hidden"); // hide alert
-    document.getElementById("forecast-section").classList.add("hidden"); // hide forecast
+    DOM.forecastSection.classList.add("hidden"); // hide forecast
+    DOM.dayPage.classList.add("hidden");
 
     DOM.cityName.textContent = ""; // clear city
     DOM.temperature.textContent = ""; // clear temperature
@@ -219,7 +251,6 @@ function displayForecast(data) {
     container.innerHTML = "";
 
     const daily = {};
-
     data.list.forEach(item => {
         const date = item.dt_txt.split(" ")[0];
 
@@ -233,9 +264,13 @@ function displayForecast(data) {
         const temp = Math.round(day.main.temp);
         const desc = day.weather[0].description;
         const date = day.dt_txt.split(" ")[0];
+        // Взимаме влажност и вятър от обекта на прогнозата
+        const humidity = day.main.humidity;
+        const wind = day.wind.speed;
 
         const card = document.createElement("div");
         card.className = "forecast-card";
+        card.style.cursor = "pointer"; // Правим го видимо, че може да се цъка
 
         card.innerHTML = `
             <p>${date}</p>
@@ -244,10 +279,33 @@ function displayForecast(data) {
             <p>${desc}</p>
         `;
 
+        // СЪБИТИЕ ЗА КЛИК: Скрива всичко и отваря пълната страница за деня
+        card.addEventListener("click", () => {
+            DOM.appHeader.classList.add("hidden");
+            DOM.searchSection.classList.add("hidden");
+            DOM.statusSection.classList.add("hidden");
+            DOM.weatherSection.classList.add("hidden");
+            DOM.alertSection.classList.add("hidden");
+            DOM.forecastSection.classList.add("hidden");
+            DOM.historySection.classList.add("hidden");
+
+            // Попълваме данните на новата страница
+            DOM.dayCity.textContent = DOM.cityName.textContent;
+            DOM.dayDate.textContent = date;
+            DOM.dayIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+            DOM.dayTemp.textContent = `${temp}°C`;
+            DOM.dayDesc.textContent = desc;
+            DOM.dayHumidity.innerHTML = `<span class="extra-label">Влажност</span> <b>${humidity}%</b>`;
+            DOM.dayWind.innerHTML = `<span class="extra-label">Вятър</span> <b>${wind} m/s</b>`;
+
+            // Показваме страницата
+            DOM.dayPage.classList.remove("hidden");
+        });
+
         container.appendChild(card);
     });
 
-    document.getElementById("forecast-section").classList.remove("hidden");
+    DOM.forecastSection.classList.remove("hidden");
 }
 
 // SEARCH HISTORY – save city
