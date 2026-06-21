@@ -68,6 +68,34 @@ body {
     cursor: pointer;
 }
 
+/* СТИЛИЗИРАНЕ НА БУТОНА ЗА ЦЕЛЗИЙ/ФАРЕНХАЙТ */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.unit-toggle-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.unit-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.unit-toggle-btn:active {
+    transform: scale(0.95);
+}
+
 .hidden {
     display: none !important;
 }
@@ -113,10 +141,11 @@ body {
 }
 
 .weather-icon-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100px;
     height: 100px;
-    display: block;
-    object-fit: contain;
 }
 
 .temperature {
@@ -337,4 +366,3 @@ body.night { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
 .hourly-cards::-webkit-scrollbar { height: 5px; }
 .hourly-cards::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
 .hourly-cards::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
- 

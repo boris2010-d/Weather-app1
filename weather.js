@@ -9,7 +9,7 @@ const DOM = { // object that stores all DOM elements
     cityName: document.getElementById("city-name"), // city name
     temperature: document.getElementById("temperature"), // temperature
     description: document.getElementById("description"), // weather description
-    weatherIcon: document.getElementById("weather-icon"), // weather icon (img)
+    weatherIcon: document.getElementById("weather-icon"), // weather icon
     humidity: document.getElementById("humidity"), // humidity
     windSpeed: document.getElementById("wind-speed"), // wind speed
 
@@ -19,6 +19,7 @@ const DOM = { // object that stores all DOM elements
     alertText: document.getElementById("alert-text"), // alert text
     
     clearHistoryBtn: document.getElementById("clear-history-btn"), // clear history button
+    unitToggleBtn: document.getElementById("unit-toggle"), // Бутон за Фаренхайт
 
     // ЕЛЕМЕНТИ ЗА СТРАНИЦАТА НА ДЕНЯ И ЧАСОВЕТЕ
     appHeader: document.querySelector(".app-header"),
@@ -39,6 +40,11 @@ const DOM = { // object that stores all DOM elements
 
 // API key for OpenWeatherMap
 const API_KEY = "39935ee879cea278a3a5f968eadce457"; // API key
+
+// Глобални променливи за управление на мерните единици и кеша
+let currentUnit = "C";
+let currentWeatherData = null;
+let currentForecastData = null;
 
 // FORM SUBMIT
 DOM.searchForm.addEventListener("submit", (event) => { // listen for submit
@@ -71,6 +77,28 @@ DOM.dayBackBtn.addEventListener("click", () => {
     if (DOM.alertText.textContent) DOM.alertSection.classList.remove("hidden");
 });
 
+// Помощна функция за форматиране на градуси спрямо бутона
+function formatTemp(celsius) {
+    if (currentUnit === "C") {
+        return `${Math.round(celsius)}°C`;
+    } else {
+        const fahrenheit = (celsius * 9) / 5 + 32;
+        return `${Math.round(fahrenheit)}°F`;
+    }
+}
+
+// СЛУШАТЕЛ ЗА БУТОНА (Обръща всичко на екрана!)
+DOM.unitToggleBtn.addEventListener("click", () => {
+    if (!currentWeatherData || !currentForecastData) return;
+
+    currentUnit = currentUnit === "C" ? "F" : "C";
+    DOM.unitToggleBtn.textContent = currentUnit === "C" ? "Промени на °F" : "Промени на °C";
+
+    // Опресняваме визуализациите с новата мерна единица
+    displayWeather(currentWeatherData);
+    displayForecast(currentForecastData);
+});
+
 // FETCH WEATHER FROM API
 async function getWeather(city) { // async function for fetch
     try {
@@ -87,6 +115,10 @@ async function getWeather(city) { // async function for fetch
                 throw new Error("Градът не е намерен."); // throw error
             }
 
+        currentWeatherData = data; // Запазваме в кеша
+        currentUnit = "C"; // Ресет на Целзий при нов град
+        DOM.unitToggleBtn.textContent = "Промени на °F";
+
         displayWeather(data); // display weather
         updateAlert(data);    // update weather alert
         saveToHistory(city);  // save city to history
@@ -102,20 +134,19 @@ async function getWeather(city) { // async function for fetch
 // DISPLAY WEATHER
 function displayWeather(data) { // function to visualize weather
     DOM.cityName.textContent = data.name; // city name
-    DOM.temperature.textContent = `${Math.round(data.main.temp)}°C`; // temperature
+    DOM.temperature.textContent = formatTemp(data.main.temp); // Конвертирана температура
     DOM.description.textContent = data.weather[0].description; // description
     DOM.humidity.textContent = `${data.main.humidity}%`; // humidity
     DOM.windSpeed.textContent = `${data.wind.speed} m/s`; // wind speed
 
-    const iconCode = data.weather[0].icon; // icon code
-    DOM.weatherIcon.src = getIconURL(iconCode); // set icon URL
-    DOM.weatherIcon.alt = data.weather[0].description;
+    const iconCode = data.weather[0].icon; 
+    DOM.weatherIcon.className = "weather-icon-img"; 
+    DOM.weatherIcon.innerHTML = `<img src="${getIconURL(iconCode)}" alt="${data.weather[0].description}" style="width:100px; height:100px;">`;
 
     updateBackground(data.weather[0].id); // change background
     updateEmoji(data.weather[0].id); // change emoji
 
     DOM.weatherSection.classList.remove("hidden"); // show weather section
-    DOM.dayPage.classList.add("hidden"); // уверяваме се, че детайлната страница е скрита при ново търсене
 }
 
 // GET ICON URL
@@ -142,14 +173,13 @@ function showError(msg) { // show error
     DOM.dayPage.classList.add("hidden");
     document.getElementById("main-hourly-section").classList.add("hidden");
 
-    DOM.cityName.textContent = ""; // clear city
-    DOM.temperature.textContent = ""; // clear temperature
-    DOM.description.textContent = ""; // clear description
-    DOM.humidity.textContent = ""; // clear humidity
-    DOM.windSpeed.textContent = ""; // clear wind
+    DOM.cityName.textContent = ""; 
+    DOM.temperature.textContent = ""; 
+    DOM.description.textContent = ""; 
+    DOM.humidity.textContent = ""; 
+    DOM.windSpeed.textContent = ""; 
 
-    DOM.weatherIcon.src = ""; // clear src
-
+    DOM.weatherIcon.innerHTML = ""; 
     DOM.moodEmoji.textContent = "🙂"; // default emoji
 }
 
@@ -191,13 +221,13 @@ function updateBackground(conditionId) { // change background
 function updateEmoji(conditionId) { // change emoji
     const emoji = DOM.moodEmoji; // emoji element
 
-    if (conditionId >= 200 && conditionId <= 232) emoji.textContent = "⛈️"; // storm
-    else if (conditionId >= 300 && conditionId <= 321) emoji.textContent = "🌦️"; // drizzle
-    else if (conditionId >= 500 && conditionId <= 531) emoji.textContent = "🌧️"; // rain
-    else if (conditionId >= 600 && conditionId <= 622) emoji.textContent = "❄️"; // snow
-    else if (conditionId >= 701 && conditionId <= 781) emoji.textContent = "🌫️"; // fog
-    else if (conditionId === 800) emoji.textContent = "😎"; // clear
-    else if (conditionId >= 801 && conditionId <= 804) emoji.textContent = "☁️"; // clouds
+    if (conditionId >= 200 && conditionId <= 232) emoji.textContent = "⛈️"; 
+    else if (conditionId >= 300 && conditionId <= 321) emoji.textContent = "🌦️"; 
+    else if (conditionId >= 500 && conditionId <= 531) emoji.textContent = "🌧️"; 
+    else if (conditionId >= 600 && conditionId <= 622) emoji.textContent = "❄️"; 
+    else if (conditionId >= 701 && conditionId <= 781) emoji.textContent = "🌫️"; 
+    else if (conditionId === 800) emoji.textContent = "😎"; 
+    else if (conditionId >= 801 && conditionId <= 804) emoji.textContent = "☁️"; 
     else emoji.textContent = "🌍"; // fallback
 }
 
@@ -244,6 +274,7 @@ async function getForecast(city) {
 
     if (data.cod !== "200") return;
 
+    currentForecastData = data; // Кешираме прогнозата
     displayForecast(data);
 }
 
@@ -262,15 +293,15 @@ function displayForecast(data) {
         dailyData[date].push(item);
     });
 
-    // --- НОВО: Напълване на часовете за ДНЕШНИЯ ден на НАЧАЛНИЯ екран ---
+    // --- Напълване на часовете за ДНЕШНИЯ ден на НАЧАЛНИЯ екран ---
     const mainHourlySection = document.getElementById("main-hourly-section");
     const mainHourlyContainer = document.getElementById("main-hourly-cards");
     mainHourlyContainer.innerHTML = "";
     
-    const todayDate = Object.keys(dailyData)[0]; // Взимаме първия ден (днес)
+    const todayDate = Object.keys(dailyData)[0]; 
     dailyData[todayDate].forEach(hourItem => {
         const time = hourItem.dt_txt.split(" ")[1].substring(0, 5); 
-        const hTemp = Math.round(hourItem.main.temp);
+        const hTemp = hourItem.main.temp;
         const hIcon = hourItem.weather[0].icon;
 
         const hourCard = document.createElement("div");
@@ -278,12 +309,11 @@ function displayForecast(data) {
         hourCard.innerHTML = `
             <p class="hour-time">${time}</p>
             <img src="https://openweathermap.org/img/wn/${hIcon}.png" alt="weather">
-            <p class="hour-temp">${hTemp}°C</p>
+            <p class="hour-temp">${formatTemp(hTemp)}</p>
         `;
         mainHourlyContainer.appendChild(hourCard);
     });
     mainHourlySection.classList.remove("hidden");
-    // -----------------------------------------------------------------
 
     // Показване на 5-те дни в седмичната прогноза
     Object.keys(dailyData).slice(0, 5).forEach(date => {
@@ -291,7 +321,7 @@ function displayForecast(data) {
         const mainDayInfo = dayIntervals[0];
 
         const icon = mainDayInfo.weather[0].icon;
-        const temp = Math.round(mainDayInfo.main.temp);
+        const temp = mainDayInfo.main.temp;
         const desc = mainDayInfo.weather[0].description;
 
         const card = document.createElement("div");
@@ -301,7 +331,7 @@ function displayForecast(data) {
         card.innerHTML = `
             <p>${date}</p>
             <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${desc}">
-            <p>${temp}°C</p>
+            <p>${formatTemp(temp)}</p>
             <p>${desc}</p>
         `;
 
@@ -317,8 +347,11 @@ function displayForecast(data) {
 
             DOM.dayCity.textContent = DOM.cityName.textContent;
             DOM.dayDate.textContent = date;
-            DOM.dayIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-            DOM.dayTemp.textContent = `${temp}°C`;
+            
+            DOM.dayIcon.className = "weather-icon-img";
+            DOM.dayIcon.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${desc}" style="width:100px; height:100px;">`;
+            
+            DOM.dayTemp.textContent = formatTemp(temp);
             DOM.dayDesc.textContent = desc;
             DOM.dayHumidity.innerHTML = `<span class="extra-label">Влажност</span> <b>${mainDayInfo.main.humidity}%</b>`;
             DOM.dayWind.innerHTML = `<span class="extra-label">Вятър</span> <b>${mainDayInfo.wind.speed} m/s</b>`;
@@ -328,7 +361,7 @@ function displayForecast(data) {
 
             dayIntervals.forEach(hourItem => {
                 const time = hourItem.dt_txt.split(" ")[1].substring(0, 5); 
-                const hTemp = Math.round(hourItem.main.temp);
+                const hTemp = hourItem.main.temp;
                 const hIcon = hourItem.weather[0].icon;
 
                 const hourCard = document.createElement("div");
@@ -336,7 +369,7 @@ function displayForecast(data) {
                 hourCard.innerHTML = `
                     <p class="hour-time">${time}</p>
                     <img src="https://openweathermap.org/img/wn/${hIcon}.png" alt="weather">
-                    <p class="hour-temp">${hTemp}°C</p>
+                    <p class="hour-temp">${formatTemp(hTemp)}</p>
                 `;
                 hourlyContainer.appendChild(hourCard);
             });
